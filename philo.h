@@ -13,39 +13,47 @@
 #ifndef PHILO_H
 # define PHILO_H
 
-# include <sys/types.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <limits.h>
-# include <sys/time.h>
-# include <pthread.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <sys/time.h>
+#include <pthread.h>
+
+#define FORK "has taken a fork"
+#define EAT "is eating"
+#define SLEEP "is sleeping"
+#define THINK "is thinking"
+#define DEAD "died"
 
 typedef struct s_rules
 {
-    int nb_philo;
-    int time_to_die;
-    int time_to_eat;
-    int time_to_sleep;
-    int nb_times_to_eat;
-    long start_time;
-    pthread_mutex_t lock;
-    pthread_mutex_t *forks;
-    int		    death_flag;
-}   t_rules;
+	unsigned long	nb_philo;
+	unsigned long	time_to_die;
+	unsigned long	time_to_eat;
+	unsigned long	time_to_sleep;
+	long			nb_times_to_eat;
+	unsigned long	start_time;
+	int				death_flag;
+	pthread_mutex_t	*meal;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	death_mutex;
+	pthread_mutex_t	print_mutex;
+}	t_rules;
 
 typedef struct s_philo
 {
-    int             id;
-    int             left_fork;
-    int             right_fork;
-    long long       last_meal_time;
-    int             meals_eaten;
-    pthread_t       thread;
-
-    struct s_rules  *rules;
-}               t_philo;
-
+	int				id;
+	long long		last_meal_time;
+	int				meals_eaten;
+	pthread_mutex_t	*meals;
+	pthread_mutex_t	*left_fork;
+	pthread_mutex_t	*right_fork;
+	int				dead;
+	pthread_t		thread;
+	t_rules			*rules;
+}	t_philo;
 
 
 long	ft_atol(const char *nptr);
