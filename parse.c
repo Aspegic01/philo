@@ -24,7 +24,6 @@ int	parse_args(int ac, char *av[], t_rules *data)
 	
 	if (ac != 5 && ac != 6)
 		return (write(2, "Invalid number of argument\n", 28));
-	
 	temp_values[0] = ft_atol(av[1]);
 	temp_values[1] = ft_atol(av[2]);
 	temp_values[2] = ft_atol(av[3]);
@@ -32,21 +31,17 @@ int	parse_args(int ac, char *av[], t_rules *data)
 	if (ac == 6)
 		temp_values[4] = ft_atol(av[5]);
 	else
-		temp_values[4] = -1; // -1 means unlimited meals
-	
-	// Check for invalid values (LONG_MAX indicates error in ft_atol)
+		temp_values[4] = -1;
 	if (temp_values[0] == LONG_MAX || temp_values[1] == LONG_MAX || 
 		temp_values[2] == LONG_MAX || temp_values[3] == LONG_MAX)
 		return (write(2, "Invalid value\n", 14));
 	if (ac == 6 && temp_values[4] == LONG_MAX)
 		return (write(2, "Invalid value\n", 14));
-	
 	data->nb_philo = temp_values[0];
 	data->time_to_die = temp_values[1];
 	data->time_to_eat = temp_values[2];
 	data->time_to_sleep = temp_values[3];
-	data->nb_times_to_eat = temp_values[4];
-	
+	data->nb_times_to_eat = temp_values[4];	
 	if (data->nb_philo <= 0 || data->time_to_die <= 0 || data->time_to_eat <= 0 || data->time_to_sleep <= 0)
 		return (write(2, "Invalid value\n", 14));
 	if (ac == 6 && data->nb_times_to_eat <= 0)
