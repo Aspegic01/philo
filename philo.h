@@ -6,7 +6,7 @@
 /*   By: mlabrirh <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:14:10 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/04/02 16:14:13 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/06/30 10:52:51 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,14 @@ typedef struct s_philo
 }	t_philo;
 
 
-long	ft_atol(const char *nptr);
-void	exit_error(char *error);
-int	parse_args(int ac, char *av[], t_rules *data);
+long			ft_atol(const char *nptr);
+void			exit_error(char *error);
+int				parse_args(int ac, char *av[], t_rules *data);
+unsigned long	gettime_now(void);
+void			print_status(t_philo *p, const char *status);
+void			philo_eat(t_philo *p);
+void			philo_think(t_philo *p);
+void			philo_sleep(t_philo *p);
+int				is_dead(t_philo *p);
 
 #endif
