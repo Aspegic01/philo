@@ -15,15 +15,13 @@
 void	exit_error(char *error)
 {
 	printf("%s", error);
-	exit(EXIT_FAILURE);
+	return ;
 }
 
 int	parse_args(int ac, char *av[], t_rules *data)
 {
 	long	temp_values[5];
 	
-	if (ac != 5 && ac != 6)
-		return (write(2, "Invalid number of argument\n", 28));
 	temp_values[0] = ft_atol(av[1]);
 	temp_values[1] = ft_atol(av[2]);
 	temp_values[2] = ft_atol(av[3]);
@@ -46,5 +44,5 @@ int	parse_args(int ac, char *av[], t_rules *data)
 		return (write(2, "Invalid value\n", 14));
 	if (ac == 6 && data->nb_times_to_eat <= 0)
 		return (write(2, "Invalid value\n", 14));
-	return 0;
+	return (0);
 }

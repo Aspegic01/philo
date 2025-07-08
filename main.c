@@ -66,7 +66,8 @@ int	check_death(t_philo *philos, t_rules *rules)
 			pthread_mutex_lock(&rules->death_mutex);
 			rules->death_flag = 1;
 			pthread_mutex_unlock(&rules->death_mutex);
-			printf("%lu %d %s\n", now - rules->start_time, philos[i].id + 1, DEAD);
+			printf("%lu %d %s\n", now - rules->start_time, \
+			philos[i].id + 1, DEAD);
 			pthread_mutex_unlock(&rules->print_mutex);
 			return (1);
 		}
@@ -82,8 +83,8 @@ void	*handle_philo(void *arg)
 
 	p = (t_philo *)arg;
 	if (p->rules->nb_philo == 1)
-		return (print_status(p, FORK), 
-	usleep(p->rules->time_to_die * 1000), NULL);
+		return (print_status(p, FORK),
+		usleep(p->rules->time_to_die * 1000), NULL);
 	if (p->id % 2 == 1)
 	{
 		philo_think(p);
@@ -102,30 +103,37 @@ void	*handle_philo(void *arg)
 	}
 	return (NULL);
 }
-
-void	ft_initiazation(t_rules *a)
+void	philo_init_data(t_rules *a, t_philo **p)
 {
-	t_philo			*p;
-	unsigned int	i;
-
 	a->start_time = gettime_now();
 	a->death_flag = 0;
-	p = malloc(sizeof(t_philo) * a->nb_philo);
-	if (!p)
+	*p = malloc(sizeof(t_philo) * a->nb_philo);
+	if (!(*p))
 		exit_error("Philosopher malloc failed\n");
 	a->forks = malloc(sizeof(pthread_mutex_t) * a->nb_philo);
 	a->meal = malloc(sizeof(pthread_mutex_t) * a->nb_philo);
 	if (!a->forks || !a->meal)
 		exit_error("Mutex malloc failed\n");
+}
+
+void	philo_init_mutexes(t_rules *a)
+{
+	unsigned int	i;
+
+	i = 0;
 	pthread_mutex_init(&a->death_mutex, NULL);
 	pthread_mutex_init(&a->print_mutex, NULL);
-	i = 0;
-	while (i < a->nb_philo)
-	{
+	while (i < a->nb_philo) {
 		pthread_mutex_init(&a->forks[i], NULL);
 		pthread_mutex_init(&a->meal[i], NULL);
 		i++;
 	}
+}
+
+void	philo_setup_philosophers(t_rules *a, t_philo *p)
+{
+	unsigned int	i;
+
 	i = 0;
 	while (i < a->nb_philo)
 	{
@@ -139,6 +147,12 @@ void	ft_initiazation(t_rules *a)
 		p[i].last_meal_time = gettime_now();
 		i++;
 	}
+}
+
+void	philo_start_threads(t_rules *a, t_philo *p)
+{
+	unsigned int	i;
+
 	i = 0;
 	while (i < a->nb_philo)
 	{
@@ -146,14 +160,30 @@ void	ft_initiazation(t_rules *a)
 			exit_error("Thread creation failed\n");
 		i++;
 	}
+}
+
+void	philo_monitor_simulation(t_rules *a, t_philo *p)
+{
 	while (!check_death(p, a) && !check_meals_complete(p, a))
-		usleep(1000);
+		philo_sleep(p);
+}
+
+void	philo_join_threads(t_rules *a, t_philo *p)
+{
+	unsigned int	i;
+
 	i = 0;
 	while (i < a->nb_philo)
 	{
 		pthread_join(p[i].thread, NULL);
 		i++;
 	}
+}
+
+void	philo_destroy_mutexes_and_free(t_rules *a, t_philo *p)
+{
+	unsigned int	i;
+
 	i = 0;
 	while (i < a->nb_philo)
 	{
@@ -167,6 +197,18 @@ void	ft_initiazation(t_rules *a)
 	free(a->forks);
 	free(a->meal);
 }
+void	ft_setup(t_rules *a)
+{
+	t_philo	*p;
+
+	philo_init_data(a, &p);
+	philo_init_mutexes(a);
+	philo_setup_philosophers(a, p);
+	philo_start_threads(a, p);
+	philo_monitor_simulation(a, p);
+	philo_join_threads(a, p);
+	philo_destroy_mutexes_and_free(a, p);
+}
 
 int	main(int ac, char **av)
 {
@@ -177,6 +219,6 @@ int	main(int ac, char **av)
 		exit_error("Rules malloc failed\n");
 	if (parse_args(ac, av, data))
 		return (free(data), 1);
-	ft_initiazation(data);
+	ft_setup(data);
 	return (free(data), 0);
 }

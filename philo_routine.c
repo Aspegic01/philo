@@ -74,8 +74,21 @@ void	philo_think(t_philo *p)
 
 void	philo_sleep(t_philo *p)
 {
+	unsigned long	start;
+	unsigned long	elapsed;
+	unsigned long	sleep_time;
+
+	start = gettime_now();
+	elapsed = 0;
+	sleep_time = p->rules->time_to_sleep;
 	print_status(p, SLEEP);
-	usleep(p->rules->time_to_sleep * 1000);
+	while (elapsed < sleep_time)
+	{
+		if (is_dead(p))
+			return ;
+		usleep(100);
+		elapsed = gettime_now() - start;
+	}
 }
 
 int	is_dead(t_philo *p)
