@@ -84,7 +84,7 @@ void	*handle_philo(void *arg)
 	p = (t_philo *)arg;
 	if (p->rules->nb_philo == 1)
 		return (print_status(p, FORK),
-		usleep(p->rules->time_to_die * 1000), NULL);
+			philo_sleep(p), NULL);
 	if (p->id % 2 == 1)
 	{
 		philo_think(p);
@@ -103,6 +103,7 @@ void	*handle_philo(void *arg)
 	}
 	return (NULL);
 }
+
 void	philo_init_data(t_rules *a, t_philo **p)
 {
 	a->start_time = gettime_now();
@@ -123,7 +124,8 @@ void	philo_init_mutexes(t_rules *a)
 	i = 0;
 	pthread_mutex_init(&a->death_mutex, NULL);
 	pthread_mutex_init(&a->print_mutex, NULL);
-	while (i < a->nb_philo) {
+	while (i < a->nb_philo)
+	{
 		pthread_mutex_init(&a->forks[i], NULL);
 		pthread_mutex_init(&a->meal[i], NULL);
 		i++;
@@ -156,7 +158,8 @@ void	philo_start_threads(t_rules *a, t_philo *p)
 	i = 0;
 	while (i < a->nb_philo)
 	{
-		if (pthread_create(&p[i].thread, NULL, handle_philo, (void *)&p[i]) != 0)
+		if (pthread_create(&p[i].thread, NULL,
+				handle_philo, (void *)&p[i]) != 0)
 			exit_error("Thread creation failed\n");
 		i++;
 	}
@@ -197,6 +200,7 @@ void	philo_destroy_mutexes_and_free(t_rules *a, t_philo *p)
 	free(a->forks);
 	free(a->meal);
 }
+
 void	ft_setup(t_rules *a)
 {
 	t_philo	*p;
