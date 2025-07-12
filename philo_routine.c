@@ -6,7 +6,7 @@
 /*   By: mlabrirh <mlabrirh@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/30 10:42:16 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/06/30 10:47:25 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/07/12 15:56:35 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@ void	print_status(t_philo *p, const char *status)
 	{
 		pthread_mutex_unlock(&p->rules->death_mutex);
 		pthread_mutex_unlock(&p->rules->print_mutex);
-		return;
+		return ;
 	}
 	pthread_mutex_unlock(&p->rules->death_mutex);
-	
 	current_time = gettime_now();
 	elapsed_time = current_time - p->rules->start_time;
 	printf("%lu %d %s\n", elapsed_time, p->id + 1, status);
@@ -62,7 +61,7 @@ void	philo_eat(t_philo *p)
 void	philo_think(t_philo *p)
 {
 	unsigned long	think_time;
-	
+
 	print_status(p, THINK);
 	if (p->rules->nb_philo % 2 == 1)
 	{

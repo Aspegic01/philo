@@ -3,29 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrirh <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mlabrirh <mlabrirh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 16:14:10 by mlabrirh          #+#    #+#             */
-/*   Updated: 2025/06/30 10:52:51 by mlabrirh         ###   ########.fr       */
+/*   Updated: 2025/07/12 15:58:09 by mlabrirh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILO_H
 # define PHILO_H
 
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <limits.h>
-#include <sys/time.h>
-#include <pthread.h>
+# include <sys/types.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <limits.h>
+# include <sys/time.h>
+# include <pthread.h>
 
-#define FORK "has taken a fork"
-#define EAT "is eating"
-#define SLEEP "is sleeping"
-#define THINK "is thinking"
-#define DEAD "died"
+# define FORK "has taken a fork"
+# define EAT "is eating"
+# define SLEEP "is sleeping"
+# define THINK "is thinking"
+# define DEAD "died"
 
 typedef struct s_rules
 {
@@ -33,10 +33,10 @@ typedef struct s_rules
 	unsigned long	time_to_die;
 	unsigned long	time_to_eat;
 	unsigned long	time_to_sleep;
-	long			nb_times_to_eat;
+	long			nb_limit_meals;
 	unsigned long	start_time;
 	int				death_flag;
-	pthread_mutex_t	*meal;
+	pthread_mutex_t	*meals;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	death_mutex;
 	pthread_mutex_t	print_mutex;
@@ -55,7 +55,6 @@ typedef struct s_philo
 	t_rules			*rules;
 }	t_philo;
 
-
 long			ft_atol(const char *nptr);
 void			exit_error(char *error);
 int				parse_args(int ac, char *av[], t_rules *data);
@@ -63,6 +62,13 @@ unsigned long	gettime_now(void);
 void			print_status(t_philo *p, const char *status);
 void			philo_eat(t_philo *p);
 void			philo_think(t_philo *p);
+int				check_meals_complete(t_philo *philos, t_rules *rules);
+int				check_death(t_philo *philos, t_rules *rules);
+void			philo_init_data(t_rules *a, t_philo **p);
+void			philo_start_threads(t_rules *a, t_philo *p);
+void			philo_monitor_simulation(t_rules *a, t_philo *p);
+void			philo_setup_philosophers(t_rules *a, t_philo *p);
+void			philo_simul_des(t_rules *a, t_philo *p);
 void			philo_sleep(t_philo *p);
 int				is_dead(t_philo *p);
 
