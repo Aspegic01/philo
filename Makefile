@@ -1,7 +1,7 @@
 CC = cc
-FLAGS = -Wall -Wextra -Werror -pthread -g
+FLAGS = -Wall -Wextra -Werror -pthread
 NAME = philo
-SRCS = ./parse.c ./utils.c ./main.c ./philo_routine.c ./ft_atol.c
+SRCS = ./parse.c ./utils.c ./philo.c ./philo_routine.c ./ft_atol.c
 
 OFILES = $(SRCS:.c=.o)
 
