@@ -56,7 +56,6 @@ typedef struct s_philo
 }	t_philo;
 
 long			ft_atol(const char *nptr);
-void			exit_error(char *error);
 int				parse_args(int ac, char *av[], t_rules *data);
 unsigned long	gettime_now(void);
 void			print_status(t_philo *p, const char *status);
@@ -64,10 +63,10 @@ void			philo_eat(t_philo *p);
 void			philo_think(t_philo *p);
 int				check_meals_complete(t_philo *philos, t_rules *rules);
 int				check_death(t_philo *philos, t_rules *rules);
-void			philo_init_data(t_rules *a, t_philo **p);
+int				philo_init_data(t_rules *a, t_philo **p);
 void			philo_start_threads(t_rules *a, t_philo *p);
 void			philo_monitor_simulation(t_rules *a, t_philo *p);
-void			philo_setup_philosophers(t_rules *a, t_philo *p);
+int				philo_setup_philosophers(t_rules *a, t_philo *p);
 void			philo_simul_des(t_rules *a, t_philo *p);
 void			philo_sleep(t_philo *p);
 int				is_dead(t_philo *p);

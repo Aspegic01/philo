@@ -39,7 +39,7 @@ void	*routine(void *arg)
 	return (NULL);
 }
 
-void	philo_init_data(t_rules *a, t_philo **p)
+int	philo_init_data(t_rules *a, t_philo **p)
 {
 	unsigned int	i;
 
@@ -47,11 +47,11 @@ void	philo_init_data(t_rules *a, t_philo **p)
 	a->death_flag = 0;
 	*p = malloc(sizeof(t_philo) * a->nb_philo);
 	if (!(*p))
-		exit_error("Philosopher malloc failed\n");
+		return (write(2, "Philosopher malloc failed\n", 26), 0);
 	a->forks = malloc(sizeof(pthread_mutex_t) * a->nb_philo);
 	a->meals = malloc(sizeof(pthread_mutex_t) * a->nb_philo);
 	if (!a->forks || !a->meals)
-		exit_error("Mutex malloc failed\n");
+		return (write(2, "Mutex malloc failed\n", 20), 0);
 	i = 0;
 	pthread_mutex_init(&a->death_mutex, NULL);
 	pthread_mutex_init(&a->print_mutex, NULL);
@@ -61,16 +61,17 @@ void	philo_init_data(t_rules *a, t_philo **p)
 		pthread_mutex_init(&a->meals[i], NULL);
 		i++;
 	}
+	return (1);
 }
 
-void	philo_setup_philosophers(t_rules *a, t_philo *p)
+int	philo_setup_philosophers(t_rules *a, t_philo *p)
 {
 	unsigned int	i;
 
 	i = 0;
 	while (i < a->nb_philo)
 	{
-		p[i].id = i;
+		p[i].id = i + 1;
 		p[i].dead = 0;
 		p[i].meals_eaten = 0;
 		p[i].rules = a;
@@ -85,9 +86,10 @@ void	philo_setup_philosophers(t_rules *a, t_philo *p)
 	{
 		if (pthread_create(&p[i].thread, NULL,
 				routine, (void *)&p[i]) != 0)
-			exit_error("Thread creation failed\n");
+			return (write(2, "Thread creation failed\n", 23), 0);
 		i++;
 	}
+	return (1);
 }
 
 void	philo_simul_des(t_rules *a, t_philo *p)
@@ -95,7 +97,7 @@ void	philo_simul_des(t_rules *a, t_philo *p)
 	unsigned int	i;
 
 	while (!check_death(p, a) && !check_meals_complete(p, a))
-		usleep(100);
+		usleep(1000);
 	i = 0;
 	while (i < a->nb_philo)
 	{

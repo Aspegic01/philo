@@ -67,7 +67,7 @@ int	check_death(t_philo *philos, t_rules *rules)
 			rules->death_flag = 1;
 			pthread_mutex_unlock(&rules->death_mutex);
 			printf("%lu %d %s\n", now - rules->start_time, \
-			philos[i].id + 1, DEAD);
+			philos[i].id, DEAD);
 			pthread_mutex_unlock(&rules->print_mutex);
 			return (1);
 		}
@@ -77,13 +77,14 @@ int	check_death(t_philo *philos, t_rules *rules)
 	return (0);
 }
 
-void	ft_setup(t_rules *a)
+int	ft_setup(t_rules *a)
 {
 	t_philo	*p;
 
-	philo_init_data(a, &p);
-	philo_setup_philosophers(a, p);
+	if (!philo_init_data(a, &p) || !philo_setup_philosophers(a, p))
+		return (0);
 	philo_simul_des(a, p);
+	return (1);
 }
 
 int	main(int ac, char **av)
@@ -102,6 +103,7 @@ int	main(int ac, char **av)
 		return (write(2, "Rules malloc failed\n", 21), 1);
 	if (parse_args(ac, av, data))
 		return (free(data), 1);
-	ft_setup(data);
+	if (!ft_setup(data))
+		return (free(data), 1);
 	return (free(data), 0);
 }

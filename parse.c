@@ -11,27 +11,6 @@
 /* ************************************************************************** */
 
 #include "philo.h"
-#include <limits.h>
-
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-void	exit_error(char *error)
-{
-	int	i;
-
-	i = 0;
-	i = ft_strlen(error);
-	write(2, error, i);
-	return ;
-}
 
 int	parse_args(int ac, char *av[], t_rules *data)
 {
@@ -48,16 +27,11 @@ int	parse_args(int ac, char *av[], t_rules *data)
 	if (temp_values[0] == LONG_MAX || temp_values[1] == LONG_MAX || \
 		temp_values[2] == LONG_MAX || temp_values[3] == LONG_MAX || \
 		(ac == 6 && temp_values[4] == LONG_MAX))
-		return (write(2, "Invalid value\n", 14));
+		return (write(2, "Invalid value\n", 14), 1);
 	data->nb_philo = temp_values[0];
 	data->time_to_die = temp_values[1];
 	data->time_to_eat = temp_values[2];
 	data->time_to_sleep = temp_values[3];
 	data->nb_limit_meals = temp_values[4];
-	if (data->nb_philo <= 0 || data->time_to_die <= 0 \
-		|| data->time_to_eat <= 0 || data->time_to_sleep <= 0)
-		return (write(2, "Invalid value\n", 14));
-	if (ac == 6 && data->nb_limit_meals <= 0)
-		return (write(2, "Invalid value\n", 14));
 	return (0);
 }
